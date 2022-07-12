@@ -1,74 +1,86 @@
-import 'dart:ui';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
-import 'package:langaw/langaw_game.dart';
+import 'package:flame/experimental.dart';
+import 'package:flame/input.dart';
 
-class Fly {
-  late Rect flyRect;
-  final LangawGame game;
+import '../langaw_game.dart';
+
+class Fly extends SpriteAnimationComponent with TapCallbacks, Hoverable {
+  late Iterable<Future<Sprite>> sprites;
+  late double sizeRatio;
+  late LangawGame game;
+  late Vector2 target;
+  bool isArrived = false;
+
   bool isDead = false;
-  bool isOffScreen = false;
-  late List<Sprite> flyingSprite;
-  late Sprite deadSprite;
-  double flyingSpriteIndex = 0;
+  Fly(this.game);
 
-  late Offset targetLocation;
+  @override
+  Future<void>? onLoad() async {
+    sprites = [1, 2].map((e) => Sprite.load('flies/fly$e.png'));
+    animation =
+        SpriteAnimation.spriteList(await Future.wait(sprites), stepTime: 0.05);
 
-  double get speed => game.tileSize * 3;
-
-  Fly(this.game) {
-    setTargetLocation();
+    target = Vector2.random(game.random)
+      ..x *= game.size.x - size.x
+      ..y *= game.size.y - size.y;
+    return super.onLoad();
   }
 
-  void render(Canvas canvas) {
-    if (isDead) {
-      deadSprite.renderRect(canvas, flyRect.inflate(2));
-    } else {
-      flyingSprite[flyingSpriteIndex.toInt()]
-          .renderRect(canvas, flyRect.inflate(2));
-    }
-  }
-
-  void update(double dt) {
-    if (isDead) {
-      flyRect = flyRect.translate(0, game.tileSize * 12 * dt);
-    } else {
-      flyingSpriteIndex += 30 * dt;
-      if (flyingSpriteIndex >= 2) {
-        flyingSpriteIndex -= 2;
-      }
-
-      double stepDistance = speed * dt;
-      Offset toTarget = targetLocation - Offset(flyRect.left, flyRect.top);
-      if (stepDistance < toTarget.distance) {
-        Offset stepToTarget =
-            Offset.fromDirection(toTarget.direction, stepDistance);
-        flyRect = flyRect.shift(stepToTarget);
-      } else {
-        flyRect = flyRect.shift(toTarget);
-        setTargetLocation();
-      }
-    }
-
-    if (flyRect.top > game.screenSize.y) {
-      isOffScreen = true;
-    }
-  }
-
-  void onTapDown() {
-    // x = Random.secure().nextDouble() * (game.screenSize.x - game.tileSize);
-    // y = Random.secure().nextDouble() * (game.screenSize.y - game.tileSize);
-
+  @override
+  void onTapDown(TapDownEvent event) {
     isDead = true;
+
+    super.onTapDown(event);
   }
 
-  void onGameResize() {}
-
-  void setTargetLocation() {
-    double x = game.random.nextDouble() *
-        (game.screenSize.x - (game.tileSize * 2.025));
-    double y = game.random.nextDouble() *
-        (game.screenSize.y - (game.tileSize * 2.025));
-    targetLocation = Offset(x, y);
+  @override
+  bool onHoverEnter(PointerHoverInfo info) {
+    isDead = true;
+    return true;
   }
+
+  @override
+  void onGameResize(Vector2 size) {
+    this.size = game.flySize;
+    super.onGameResize(size);
+  }
+
+  @override
+  Future<void> update(double dt) async {
+    if (isDead) {
+      animation = SpriteAnimation.spriteList(
+          [await Sprite.load('flies/dead.png')],
+          stepTime: 0.05, loop: false);
+
+      position.moveToTarget(Vector2(x, game.size.y), 2.5);
+      if (y == game.size.y) {
+        game.remove(this);
+        game.spawnFlies(1);
+        game.score++;
+      }
+    } else {
+      if (!isArrived) {
+        position.moveToTarget(target, 1.5);
+        if (position == target) {
+          isArrived = true;
+        }
+      } else {
+        target = Vector2.random(game.random)
+          ..x *= game.size.x - size.x
+          ..y *= game.size.y - size.y;
+        isArrived = false;
+      }
+
+      if (!game.containsPoint(position)) {
+        game.remove(this);
+        game.spawnFlies(1);
+        game.score -= 0.1;
+      }
+    }
+
+    super.update(dt);
+  }
+
+  // @override
+  // bool get debugMode => true;
 }
