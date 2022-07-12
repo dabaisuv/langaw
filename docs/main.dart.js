@@ -22323,7 +22323,7 @@ while(true)switch(s){case 0:o=q.a
 n=A.f(o.d,"currentGame")
 if(n.e===$){n.cy=A.RH(n)
 n.cx=$.OI()
-n.lX(5)
+n.lX(20)
 p=J.l(n).td(n)
 A.bt(n.e,"_onLoadFuture")
 n.e=p}A.f(o.d,"currentGame")

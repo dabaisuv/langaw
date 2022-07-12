@@ -29,7 +29,7 @@ class LangawGame extends Game with TapDetector {
   Future<void>? onLoad() {
     background = Backyard(this);
     random = Random.secure();
-    spawnFly(5);
+    spawnFly(20);
     return super.onLoad();
   }
 
