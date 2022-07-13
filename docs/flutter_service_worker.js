@@ -3,11 +3,12 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "c1b5d705fde015e4c755d238c2b012c9",
+  "assets/AssetManifest.json": "3f3a10be523ecd26a0cc22ac9f0c61b2",
 "assets/assets/audio/music/dreams.mp3": "676b4b5ae44549190485e430f032388e",
 "assets/assets/audio/sfx/biu1.mp3": "2f5f53c176311b3f9863e0050c236b88",
 "assets/assets/audio/sfx/biu2.mp3": "5ce3f128dd22c0f3a1e4ae362f319fca",
 "assets/assets/images/background/langaw-game-background.png": "b8f36308dd88a1e8a04ad83bf183e07b",
+"assets/assets/images/cursors/Red_Fire_Cursor.gif": "f97222747e01230e384f840c0d9752ae",
 "assets/assets/images/flies/dead.png": "21ed6e1c5c9704f4a5a7ef983c4c480b",
 "assets/assets/images/flies/fly1.png": "750d963389f642b1b361af9aa7ae529d",
 "assets/assets/images/flies/fly2.png": "814319a5219e701ef6b38bfd98e7298c",
@@ -25,9 +26,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "be0de85d4cf6308eb519dd751b9ab320",
-"/": "be0de85d4cf6308eb519dd751b9ab320",
-"main.dart.js": "f53a36775c0c51b18df7e1e27aff0c13",
+"index.html": "836ba42b6cd51e1f7297003def020393",
+"/": "836ba42b6cd51e1f7297003def020393",
+"main.dart.js": "10d8d5c755c8a35362970430d1783af6",
 "manifest.json": "f8ca62b3a98a9b3c7585591f472fc786",
 "version.json": "af4139b61cc5dbe7c2b022b11dfe7b92"
 };
