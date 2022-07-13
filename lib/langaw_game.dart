@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/audio_pool.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_audio/flame_audio.dart';
 
@@ -16,12 +17,16 @@ class LangawGame extends FlameGame
   Random random = Random.secure();
   late TextComponent scoreText;
   late double score;
+  late AudioPool biu1Pool;
+  late AudioPool biu2Pool;
 
   int get level => (score / 5).floor();
 
   @override
   Future<void>? onLoad() async {
-    //await FlameAudio.audioCache.loadAll(['sfx/biu1.mp3', 'sfx/biu2.mp3']);
+    biu1Pool = await AudioPool.create('audio/sfx/biu1.mp3', maxPlayers: 100);
+    biu2Pool = await AudioPool.create('audio/sfx/biu2.mp3', maxPlayers: 100);
+    // await FlameAudio.audioCache.loadAll(['sfx/biu1.mp3', 'sfx/biu2.mp3']);
 
     FlameAudio.bgm.initialize();
     FlameAudio.bgm.play('music/dreams.mp3');
@@ -36,13 +41,15 @@ class LangawGame extends FlameGame
 
     score = 0;
     const style =
-        TextStyle(color: Color.fromARGB(255, 220, 225, 77), fontSize: 30);
+        TextStyle(color: Color.fromARGB(255, 220, 225, 77), fontSize: 20);
     final regular = TextPaint(style: style);
-    scoreText =
-        TextComponent(text: '等级: $level , 得分: $score', textRenderer: regular)
-          ..anchor = Anchor.topCenter
-          ..x = 1 / 2 * size.x
-          ..y = 0;
+    scoreText = TextComponent(
+        text:
+            '等级: $level , 得分: $score , 剩余: ${children.whereType<Fly>().where((element) => element.isDead == false).length}',
+        textRenderer: regular)
+      ..anchor = Anchor.topCenter
+      ..x = 1 / 2 * size.x
+      ..y = 0;
 
     add(scoreText);
     return super.onLoad();
@@ -78,7 +85,8 @@ class LangawGame extends FlameGame
   @override
   void update(double dt) {
     super.update(dt);
-    scoreText.text = '等级: $level , 得分: $score';
+    scoreText.text =
+        '等级: $level , 得分: $score , 剩余: ${children.whereType<Fly>().where((element) => element.isDead == false).length}';
     if (children.whereType<Fly>().isEmpty) {
       var tmpNum = (level * 10).floor() + 20;
       if (tmpNum >= 50) {
@@ -105,6 +113,11 @@ class LangawGame extends FlameGame
 
   void playBiu() {
     var index = random.nextInt(2) + 1;
-    FlameAudio.play('sfx/biu$index.mp3');
+    if (index == 1) {
+      biu1Pool.start();
+    } else {
+      biu2Pool.start();
+    }
+    // FlameAudio.play('sfx/biu$index.mp3');
   }
 }
