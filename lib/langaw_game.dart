@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import 'components/fly.dart';
 
@@ -20,6 +21,8 @@ class LangawGame extends FlameGame
 
   @override
   Future<void>? onLoad() async {
+    await FlameAudio.audioCache.loadAll(['sfx/biu1.mp3', 'sfx/biu2.mp3']);
+    FlameAudio.bgm.play('music/dreams.mp3');
     dragPosition = Vector2(0, 0);
     background = SpriteComponent()
       ..size = size
@@ -29,7 +32,7 @@ class LangawGame extends FlameGame
     flySize = Vector2(size.x / 9, size.x / 9);
 
     flies = <Fly>[];
-    spawnFlies(150);
+    spawnFlies(80);
 
     score = 0;
     const style =

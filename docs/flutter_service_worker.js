@@ -3,14 +3,17 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "4a0791e2210bd61fc59877394eb6127b",
+  "assets/AssetManifest.json": "c1b5d705fde015e4c755d238c2b012c9",
+"assets/assets/audio/music/dreams.mp3": "676b4b5ae44549190485e430f032388e",
+"assets/assets/audio/sfx/biu1.mp3": "2f5f53c176311b3f9863e0050c236b88",
+"assets/assets/audio/sfx/biu2.mp3": "5ce3f128dd22c0f3a1e4ae362f319fca",
 "assets/assets/images/background/langaw-game-background.png": "b8f36308dd88a1e8a04ad83bf183e07b",
 "assets/assets/images/flies/dead.png": "21ed6e1c5c9704f4a5a7ef983c4c480b",
 "assets/assets/images/flies/fly1.png": "750d963389f642b1b361af9aa7ae529d",
 "assets/assets/images/flies/fly2.png": "814319a5219e701ef6b38bfd98e7298c",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/fonts/MaterialIcons-Regular.otf": "95db9098c58fd6db106f1116bae85a0b",
-"assets/NOTICES": "70e785035d40aa54797dd5f50bb5ff6e",
+"assets/NOTICES": "a982f2ee403f8a959084ba4f0ff328e9",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "canvaskit/canvaskit.wasm": "4b83d89d9fecbea8ca46f2f760c5a9ba",
@@ -22,9 +25,9 @@ const RESOURCES = {
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "f80ceb4f0a121f386d4792cdf536fd2d",
-"/": "f80ceb4f0a121f386d4792cdf536fd2d",
-"main.dart.js": "1cff8690782fd09f87d3b494e6e4ca5f",
+"index.html": "f46edeb67ddce0109fe715226737dc30",
+"/": "f46edeb67ddce0109fe715226737dc30",
+"main.dart.js": "394715ba7b874e8af9ee530e4b15c6fc",
 "manifest.json": "f8ca62b3a98a9b3c7585591f472fc786",
 "version.json": "af4139b61cc5dbe7c2b022b11dfe7b92"
 };

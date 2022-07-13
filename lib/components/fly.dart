@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/input.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import '../langaw_game.dart';
 
@@ -36,6 +37,8 @@ class Fly extends SpriteAnimationComponent
 
   @override
   bool onHoverEnter(PointerHoverInfo info) {
+    var index = game.random.nextInt(2) + 1;
+    FlameAudio.play('sfx/biu$index.mp3');
     isDead = true;
     return true;
   }
@@ -77,10 +80,13 @@ class Fly extends SpriteAnimationComponent
         game.spawnFlies(1);
         game.score -= 0.1;
       }
+      if (containsPoint(game.dragPosition)) {
+        var index = game.random.nextInt(2) + 1;
+        FlameAudio.play('sfx/biu$index.mp3');
+        isDead = true;
+      }
     }
-    if (containsPoint(game.dragPosition)) {
-      isDead = true;
-    }
+
     super.update(dt);
   }
 
