@@ -29,7 +29,7 @@ class LangawGame extends FlameGame
     flySize = Vector2(size.x / 9, size.x / 9);
 
     flies = <Fly>[];
-    spawnFlies(100);
+    spawnFlies(150);
 
     score = 0;
     const style =
@@ -83,5 +83,11 @@ class LangawGame extends FlameGame
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
     dragPosition = event.canvasPosition;
+  }
+
+  @override
+  void onDragEnd(DragEndEvent event) {
+    dragPosition = Vector2(-1, -1);
+    super.onDragEnd(event);
   }
 }

@@ -53,7 +53,7 @@ class Fly extends SpriteAnimationComponent
           [await Sprite.load('flies/dead.png')],
           stepTime: 0.05, loop: false);
 
-      position.moveToTarget(Vector2(x, game.size.y), 5);
+      position.moveToTarget(Vector2(x, game.size.y), 5 * size.x * dt * 1);
       if (y == game.size.y) {
         game.remove(this);
         game.spawnFlies(1);
@@ -61,7 +61,7 @@ class Fly extends SpriteAnimationComponent
       }
     } else {
       if (!isArrived) {
-        position.moveToTarget(target, 2);
+        position.moveToTarget(target, 1.5 * size.x * dt * 1);
         if (position == target) {
           isArrived = true;
         }
