@@ -115,6 +115,7 @@ class LangawGame extends FlameGame
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
+    updateCursorPosition(event.canvasPosition);
     var tmpChildren = children.whereType<Fly>();
     for (var fly in tmpChildren) {
       if (fly.containsPoint(event.canvasPosition)) {
@@ -128,8 +129,7 @@ class LangawGame extends FlameGame
 
   @override
   void onMouseMove(PointerHoverInfo info) {
-    mousePosition = info.eventPosition.global;
-    flameCursor.position = mousePosition;
+    updateCursorPosition(info.eventPosition.global);
     super.onMouseMove(info);
     propagateToChildren<Hoverable>((c) => c.handleMouseMovement(info));
   }
@@ -141,5 +141,10 @@ class LangawGame extends FlameGame
     } else {
       biu2Pool.start();
     }
+  }
+
+  void updateCursorPosition(Vector2 position) {
+    mousePosition = position;
+    flameCursor.position = mousePosition;
   }
 }
