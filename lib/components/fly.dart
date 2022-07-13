@@ -4,7 +4,8 @@ import 'package:flame/input.dart';
 
 import '../langaw_game.dart';
 
-class Fly extends SpriteAnimationComponent with TapCallbacks, Hoverable {
+class Fly extends SpriteAnimationComponent
+    with TapCallbacks, Hoverable, DragCallbacks {
   late Iterable<Future<Sprite>> sprites;
   late double sizeRatio;
   late LangawGame game;
@@ -52,7 +53,7 @@ class Fly extends SpriteAnimationComponent with TapCallbacks, Hoverable {
           [await Sprite.load('flies/dead.png')],
           stepTime: 0.05, loop: false);
 
-      position.moveToTarget(Vector2(x, game.size.y), 2.5);
+      position.moveToTarget(Vector2(x, game.size.y), 5);
       if (y == game.size.y) {
         game.remove(this);
         game.spawnFlies(1);
@@ -60,7 +61,7 @@ class Fly extends SpriteAnimationComponent with TapCallbacks, Hoverable {
       }
     } else {
       if (!isArrived) {
-        position.moveToTarget(target, 1.5);
+        position.moveToTarget(target, 2);
         if (position == target) {
           isArrived = true;
         }
@@ -77,10 +78,12 @@ class Fly extends SpriteAnimationComponent with TapCallbacks, Hoverable {
         game.score -= 0.1;
       }
     }
-
+    if (containsPoint(game.dragPosition)) {
+      isDead = true;
+    }
     super.update(dt);
   }
 
-  // @override
-  // bool get debugMode => true;
+  @override
+  bool get debugMode => true;
 }

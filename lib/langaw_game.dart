@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 
 import 'components/fly.dart';
 
-class LangawGame extends FlameGame with HasTappableComponents, HasHoverables {
+class LangawGame extends FlameGame
+    with HasTappableComponents, HasHoverables, HasDraggableComponents {
   bool isFirstLoad = true;
   late SpriteComponent background;
   late List<Fly> flies;
@@ -15,9 +16,11 @@ class LangawGame extends FlameGame with HasTappableComponents, HasHoverables {
   Random random = Random.secure();
   late TextComponent scoreText;
   late double score;
+  late Vector2 dragPosition;
 
   @override
   Future<void>? onLoad() async {
+    dragPosition = Vector2(0, 0);
     background = SpriteComponent()
       ..size = size
       ..sprite = await loadSprite('background/langaw-game-background.png');
@@ -48,6 +51,10 @@ class LangawGame extends FlameGame with HasTappableComponents, HasHoverables {
       flySize
         ..x = canvasSize.x / 9
         ..y = canvasSize.x / 9;
+      scoreText
+        ..anchor = Anchor.topCenter
+        ..x = 1 / 2 * size.x
+        ..y = 0;
     }
 
     isFirstLoad = false;
@@ -70,5 +77,11 @@ class LangawGame extends FlameGame with HasTappableComponents, HasHoverables {
   void update(double dt) {
     super.update(dt);
     scoreText.text = '得分：$score';
+  }
+
+  @override
+  void onDragUpdate(DragUpdateEvent event) {
+    super.onDragUpdate(event);
+    dragPosition = event.canvasPosition;
   }
 }
