@@ -84,6 +84,6 @@ class Fly extends SpriteAnimationComponent
     super.update(dt);
   }
 
-  @override
-  bool get debugMode => true;
+  // @override
+  // bool get debugMode => true;
 }
