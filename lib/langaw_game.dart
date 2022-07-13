@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/audio_pool.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flame_audio/flame_audio.dart';
 
 import 'components/fly.dart';
+import 'components/flame_cursor.dart';
 
 class LangawGame extends FlameGame
     with HasTappableComponents, HasHoverables, HasDraggableComponents {
@@ -19,26 +21,40 @@ class LangawGame extends FlameGame
   late double score;
   late AudioPool biu1Pool;
   late AudioPool biu2Pool;
+  late AudioPool bgmPool;
+  late FlameCursor flameCursor;
+  late Vector2 mousePosition;
 
   int get level => (score / 5).floor();
 
   @override
   Future<void>? onLoad() async {
+    //init cursor
+    flameCursor = FlameCursor()
+      ..size = Vector2(size.x / 18, size.x / 18)
+      ..position = size / 2
+      ..priority = 2;
+    add(flameCursor);
+    mousePosition = size / 2;
+
+    //init audio
     biu1Pool = await AudioPool.create('audio/sfx/biu1.mp3', maxPlayers: 100);
     biu2Pool = await AudioPool.create('audio/sfx/biu2.mp3', maxPlayers: 100);
-    // await FlameAudio.audioCache.loadAll(['sfx/biu1.mp3', 'sfx/biu2.mp3']);
-
-    FlameAudio.bgm.initialize();
     FlameAudio.bgm.play('music/dreams.mp3');
+
+    //init background
     background = SpriteComponent()
       ..size = size
       ..sprite = await loadSprite('background/langaw-game-background.png');
     add(background);
 
+    //init flysize
     flySize = Vector2(size.x / 9, size.x / 9);
 
+    //spawn flies
     spawnFlies(20);
 
+    //init score board
     score = 0;
     const style =
         TextStyle(color: Color.fromARGB(255, 220, 225, 77), fontSize: 20);
@@ -50,7 +66,6 @@ class LangawGame extends FlameGame
       ..anchor = Anchor.topCenter
       ..x = 1 / 2 * size.x
       ..y = 0;
-
     add(scoreText);
     return super.onLoad();
   }
@@ -111,6 +126,14 @@ class LangawGame extends FlameGame
     }
   }
 
+  @override
+  void onMouseMove(PointerHoverInfo info) {
+    mousePosition = info.eventPosition.global;
+    flameCursor.position = mousePosition;
+    super.onMouseMove(info);
+    propagateToChildren<Hoverable>((c) => c.handleMouseMovement(info));
+  }
+
   void playBiu() {
     var index = random.nextInt(2) + 1;
     if (index == 1) {
@@ -118,6 +141,5 @@ class LangawGame extends FlameGame
     } else {
       biu2Pool.start();
     }
-    // FlameAudio.play('sfx/biu$index.mp3');
   }
 }
