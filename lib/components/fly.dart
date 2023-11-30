@@ -1,11 +1,9 @@
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
-import 'package:flame/input.dart';
+import 'package:flame/events.dart';
 
 import '../langaw_game.dart';
 
-class Fly extends SpriteAnimationComponent
-    with TapCallbacks, Hoverable, DragCallbacks {
+class Fly extends SpriteAnimationComponent with TapCallbacks {
   late Iterable<Future<Sprite>> sprites;
   late double sizeRatio;
   late LangawGame game;
@@ -35,15 +33,6 @@ class Fly extends SpriteAnimationComponent
     isDead = true;
 
     super.onTapDown(event);
-  }
-
-  @override
-  bool onHoverEnter(PointerHoverInfo info) {
-    if (!isDead) {
-      game.playBiu();
-    }
-    isDead = true;
-    return true;
   }
 
   @override
@@ -80,7 +69,6 @@ class Fly extends SpriteAnimationComponent
       if (!game.containsPoint(position)) {
         game.remove(this);
         game.spawnFlies(1);
-        game.score -= 0.1;
       }
     }
 

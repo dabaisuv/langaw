@@ -6,6 +6,7 @@ import 'langaw_game.dart';
 
 void main() {
   LangawGame langawGame = LangawGame();
+
   runApp(GameWidget(
     game: langawGame,
     mouseCursor: SystemMouseCursors.none,

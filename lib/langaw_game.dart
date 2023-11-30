@@ -2,17 +2,17 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/experimental.dart';
-import 'package:flame/game.dart';
-import 'package:flame_audio/audio_pool.dart';
-import 'package:flutter/material.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flame/extensions.dart';
 
+import 'package:flame/game.dart';
+import 'package:flame/text.dart';
+
+import 'package:flame_audio/flame_audio.dart';
 import 'components/fly.dart';
 import 'components/flame_cursor.dart';
 
 class LangawGame extends FlameGame
-    with HasTappableComponents, HasHoverables, HasDraggableComponents {
+    with TapCallbacks, DragCallbacks, HoverCallbacks {
   bool isFirstLoad = true;
   late SpriteComponent background;
   late Vector2 flySize;
@@ -29,6 +29,20 @@ class LangawGame extends FlameGame
 
   @override
   Future<void>? onLoad() async {
+    await FlameAudio.audioCache.load('sfx/biu1.mp3');
+    await FlameAudio.audioCache.load('sfx/biu2.mp3');
+    await FlameAudio.audioCache.load('music/dreams.mp3');
+    // print(FlameAudio.audioCache.loadedFiles.entries);
+    biu1Pool = await FlameAudio.createPool(
+      'sfx/biu1.mp3',
+      maxPlayers: 99,
+    );
+
+    biu2Pool = await FlameAudio.createPool(
+      'sfx/biu2.mp3',
+      maxPlayers: 99,
+    );
+
     //init cursor
     flameCursor = FlameCursor()
       ..size = Vector2(size.x / 18, size.x / 18)
@@ -38,10 +52,12 @@ class LangawGame extends FlameGame
     mousePosition = size / 2;
 
     //init audio
-    biu1Pool = await AudioPool.create('audio/sfx/biu1.mp3', maxPlayers: 100);
-    biu2Pool = await AudioPool.create('audio/sfx/biu2.mp3', maxPlayers: 100);
-    FlameAudio.bgm.play('music/dreams.mp3');
-
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.audioPlayer.play(
+        AssetSource(
+          'music/dreams.mp3',
+        ),
+        volume: 0.3);
     //init background
     background = SpriteComponent()
       ..size = size
@@ -71,12 +87,13 @@ class LangawGame extends FlameGame
   }
 
   @override
-  void onGameResize(Vector2 canvasSize) {
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
     if (!isFirstLoad) {
-      background.size = canvasSize;
+      background.size = size;
       flySize
-        ..x = canvasSize.x / 9
-        ..y = canvasSize.x / 9;
+        ..x = size.x / 9
+        ..y = size.x / 9;
       scoreText
         ..anchor = Anchor.topCenter
         ..x = 1 / 2 * size.x
@@ -84,7 +101,6 @@ class LangawGame extends FlameGame
     }
 
     isFirstLoad = false;
-    super.onGameResize(canvasSize);
   }
 
   void spawnFlies(int spawnNum) {
@@ -128,19 +144,28 @@ class LangawGame extends FlameGame
   }
 
   @override
-  void onMouseMove(PointerHoverInfo info) {
-    updateCursorPosition(info.eventPosition.global);
-    super.onMouseMove(info);
-    propagateToChildren<Hoverable>((c) => c.handleMouseMovement(info));
+  void onPointerMove(PointerMoveEvent event) {
+    super.onPointerMove(event);
+    updateCursorPosition(event.canvasPosition);
+
+    var tmpChildren = children.whereType<Fly>();
+    for (var fly in tmpChildren) {
+      if (fly.containsPoint(event.canvasPosition)) {
+        if (!fly.isDead) {
+          playBiu();
+          fly.isDead = true;
+        }
+      }
+    }
   }
 
   void playBiu() {
-    var index = random.nextInt(2) + 1;
-    if (index == 1) {
-      biu1Pool.start();
-    } else {
-      biu2Pool.start();
-    }
+    // var index = random.nextInt(2) + 1;
+    // if (index == 1) {
+    //   biu1Pool.start();
+    // } else {
+    //   biu2Pool.start();
+    // }
   }
 
   void updateCursorPosition(Vector2 position) {
